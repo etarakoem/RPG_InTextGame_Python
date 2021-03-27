@@ -1,0 +1,115 @@
+from IPython.display import clear_output
+class player:
+    def __init__(self,name,maxhp, hp, att,dfd):
+        self.name = name
+        self.maxhp = maxhp
+        self.att = att
+        self.hp = hp
+        self.dfd = dfd
+    def hpbuff(self,value):
+        #print('Enemy attacks!')
+        self.hp += value
+        if self.hp < 0:
+            self.hp = 0
+        return self.hp
+    def dfdbuff(self,value):
+        self.dfd += value
+        return self.dfd
+    def attbuff(self,value):
+        self.att += value
+        return self.att
+    def appear(self):
+        if self.hp == 0:
+            return '{} {}   {} {} {} {} {}'.format(self.name,' HP:','0',' Attack:',self.att,' Def:',self.dfd)
+        elif 10<=self.hp<=99:
+            return '{} {}  {} {} {} {} {}'.format(self.name,' HP:',self.hp,' Attack:',self.att,' Def:',self.dfd)
+        else:
+            return '{} {} {} {} {} {} {}'.format(self.name,' HP:',self.hp,' Attack:',self.att,' Def:',self.dfd)
+    def hpbar(self):
+        per = 0
+        per = (self.hp*100)//self.maxhp
+        left = ((self.maxhp - self.hp)*100)//self.maxhp
+        if per == 0:
+            per = 0
+            left = 100
+            return '{}{}  {}{}{}'.format('  0','%','|',' '*2*(left//10),'|')
+        elif 10<=per<=99:
+            return ' {}{} {}{}{}{}'.format(per,'% ','|','*'*2*(per//10),' '*2*(left//10),'|')
+        else:
+            return '{}{} {}{}{}{}'.format(per,'% ','|','*'*2*(per//10),' '*2*(left//10),'|')
+np1 = 'Player1'
+np2 = 'Player2'
+mhp = 100
+hp = 100
+p1 = player(np1,mhp,hp, 50, 10)
+p2 = player(np2,mhp,hp, 50, 10)
+
+#print('Comand list: attack(a), def(d), heal(h), attb(ab), defbuff(db), attack and def buff (ad)')
+print(p1.appear())
+print(p2.appear())
+
+turn = 0
+a1 = 0
+a2 = 0
+while (p1.hp > 0) and (p2.hp > 0):
+    if turn % 2 == 0:
+        print('Comand list: attack(a), def(d), heal(h), attb(ab), defbuff(db), attack and def buff (ad)')
+        print('Choose your action, '+ np1)
+        comand = input()
+        clear_output()
+        a1+= 10
+        if comand == 'a':
+            p2.hpbuff(-(p1.att-p2.dfd))
+        elif comand == 'd':
+            p1.dfdbuff(a1)
+        elif comand == 'h':
+            p1.hpbuff(a1)
+        elif comand == 'ab':
+            p1.attbuff(a1)
+        elif comand == 'db':
+            p1.dfdbuff(a1)
+        elif comand == 'ad':
+            p1.attbuff(a1//2)
+            p1.dfdbuff(a1//2)
+        else:
+            print('No comand found')
+            turn += 1
+        #elif comand == 'ab':
+            
+        turn += 1
+        print(p1.appear(),end = "     ")
+        print(p2.appear())
+        print(p1.hpbar(),end = "            ")
+        print(p2.hpbar())
+    else:
+        print('Comand list: attack(a), def(d), heal(h), attb(ab), defbuff(db), attack and def buff (ad)')
+        print('Choose your action, '+ np2)
+        comand = input()
+        clear_output()
+        a2 += 10
+        if comand == 'a':
+            p1.hpbuff(-(p2.att-p1.dfd))
+        elif comand == 'd':
+            p2.dfdbuff(a2)
+        elif comand == 'h':
+            p2.hpbuff(a2)
+        elif comand == 'ab':
+            p2.attbuff(a2)
+        elif comand == 'db':
+            p2.dfdbuff(a1)
+        elif comand == 'ad':
+            p2.attbuff(a2//2)
+            p2.dfdbuff(a2//2)
+        else:
+            print('No comand found')
+            turn += 1
+        print(p1.appear(),end = "     ")
+        print(p2.appear())
+        print(p1.hpbar(),end = "            ")
+        print(p2.hpbar())
+        turn +=1
+if p1.hp > 0:
+    print(p1.name,' Wins')
+else:
+    print(p2.name,' Wins')
+    

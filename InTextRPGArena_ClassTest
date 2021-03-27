@@ -1,0 +1,142 @@
+import random
+from IPython.display import clear_output
+class player:
+    def __init__(self,name,maxhp, hp, att,dfd,crit,recover):
+        self.name = name
+        self.maxhp = maxhp
+        self.att = att
+        self.hp = hp
+        self.dfd = dfd
+        self.crit = crit
+        self.recover = recover
+    def hpbuff(self,value):
+        #print('Enemy attacks!')
+        self.hp += value
+        if self.hp < 0:
+            self.hp = 0
+        return self.hp
+    def dfdbuff(self,value):
+        self.dfd += value
+        return self.dfd
+    def attbuff(self,value):
+        self.att += value
+        return self.att
+    def dodge(self):
+        chance = random.randint(1,101) 
+        #print('Dodge chance: ',chance)
+        if chance < self.crit:
+            return True
+        else:
+            return False
+    def critical(self):
+        chance = random.randint(1,101)
+        #print('Crit chance:',chance)
+        if chance < self.crit:
+            #print('Crit chance:',chance)
+            return True
+        else:
+            return False
+    def appear(self):
+        if self.hp == 0:
+            return '{} {}   {} {} {} {} {}'.format(self.name,' HP:','0',' Attack:',self.att,' Def:',self.dfd)
+        elif 10<=self.hp<=99:
+            return '{} {}  {} {} {} {} {}'.format(self.name,' HP:',self.hp,' Attack:',self.att,' Def:',self.dfd)
+        else:
+            return '{} {} {} {} {} {} {}'.format(self.name,' HP:',self.hp,' Attack:',self.att,' Def:',self.dfd)
+    def hpbar(self):
+        per = 0
+        per = (self.hp*100)//self.maxhp
+        left = ((self.maxhp - self.hp)*100)//self.maxhp
+        if per == 0:
+            per = 0
+            left = 100
+            return '{}{}  {}{}{}'.format('  0','%','|',' '*2*(left//10),'|')
+        elif 10<=per<=99:
+            return ' {}{} {}{}{}{}'.format(per,'% ','|','*'*2*(per//10),' '*2*(left//10),'|')
+        else:
+            return '{}{} {}{}{}{}'.format(per,'% ','|','*'*2*(per//10),' '*2*(left//10),'|')
+    def infoclass(self):
+        print(self.name,' HP:',self.hp,' Attack:',self.att,' Def:',self.dfd)
+        if self.crit > 0:
+            print(self.name,' Has increase chance of dealing double damage')
+            print(self.name,' Has increase chance of dodging, up to 60%')
+        elif self.recover >0:
+            per = (self.recover*100)//self.att
+            print(self.name,' has the ability to heal back ',per,'% of Damage dealt')
+            if self.name == 'Berserker':
+                print(self.name,' Increase the damage and defend by the % of missing health')
+            else:
+                print(self.name,' has a great amount of health')
+        else:
+            print(self.name,' Is the Balance class')
+            print(self.name,' Can reflect damage')
+def game(you,foe,a):
+    print('Comand list: attack(a), def(d), heal(h), attb(ab), defbuff(db), attack and def buff (ad)')
+    print('Choose your action, '+ you.name)
+    comand = input()
+    clear_output()
+    a= 10
+    if comand == 'a':
+        a = abs(you.att-foe.dfd)
+        h = you.recover
+        if you.critical() == True:
+            print("Crit strike from ",you.name)
+            #print("Damage = ",2*abs(you.att-foe.dfd))
+            #crits = (you.crit//100)+1
+            crits = 2
+            a = crits*a
+        if foe.name == "Assassin":
+            if foe.dodge() == True:
+                print("You miss the attack,",you.name)
+                a = 0
+        foe.hpbuff(-a)
+        you.hpbuff(h)
+            #print("Damage =",abs((you.att-foe.dfd)))
+    elif comand == 'd':
+        you.dfdbuff(a)
+    elif comand == 'h':
+        you.hpbuff(a)
+    elif comand == 'ab':
+        you.attbuff(a)
+    elif comand == 'db':
+        you.dfdbuff(a1)
+    elif comand == 'ad':
+        you.attbuff(a//2)
+        you.dfdbuff(a//2)
+    else:
+        print('No comand found')
+        #turn += 1
+        return False
+        
+    #turn += 1
+    print(you.appear(),end = "     ")
+    print(foe.appear())
+    print(you.hpbar(),end = "            ")
+    print(foe.hpbar())
+    return True
+
+Knight = player("Knight",150,150,10,40,0,0)
+Assassin = player("Assassin",120,120,50,20,50,0)
+Berserker = player("Berserker",130,130,65,5,50,10)
+Paladin = player("Paladin",180,180,10,10,0,40)
+
+p1 = Berserker
+p2 = Assassin
+turn = 0
+a1 = 0
+a2 = 0
+while (p1.hp > 0) and (p2.hp > 0):
+    if turn % 2 == 0:
+        if game(p1,p2,a1) == True:
+            turn += 1
+        else:
+            turn +2
+    else:
+        if game(p2,p1,a2) == True:
+            turn += 1
+        else:
+            turn +2
+if p1.hp >0:
+    print(p1.name,"Wins")
+else:
+    print(p2.name,"Wins")

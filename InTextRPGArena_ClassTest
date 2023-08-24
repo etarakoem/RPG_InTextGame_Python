@@ -1,5 +1,5 @@
 import random
-from IPython.display import clear_output
+import os
 class player:
     def __init__(self,name,maxhp, hp, att,dfd,crit,recover):
         self.name = name
@@ -74,7 +74,7 @@ def game(you,foe,a):
     print('Comand list: attack(a), def(d), heal(h), attb(ab), defbuff(db), attack and def buff (ad)')
     print('Choose your action, '+ you.name)
     comand = input()
-    clear_output()
+    os.system('clear')
     a= 10
     if comand == 'a':
         a = abs(you.att-foe.dfd)

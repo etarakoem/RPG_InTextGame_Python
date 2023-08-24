@@ -1,5 +1,5 @@
-# import random
-from IPython.display import clear_output
+import random
+import os
 class player:
     def __init__(self,name,maxhp, hp, att,dfd,crit,recover):
         self.name = name
@@ -68,7 +68,7 @@ def choice():
     else:
         return False
 def showoption(x):
-    clear_output(wait =True)
+    os.system('clear')
     #print(comand.isalpha())
     print("Choose your class,",x,':')
     print("(1)Knight")
@@ -79,7 +79,7 @@ def showoption(x):
     comand = input("preview class:")
     #print("\033[A                             \033[A")
     while comand.isalpha() == True:
-        clear_output(wait =True)
+        os.system('clear')
         #print(comand.isalpha())
         print("Choose your class,",x,':')
         print("(1)Knight")
@@ -109,9 +109,8 @@ def showoption(x):
 
 def wait():
     input("Press Enter to continue...")
-    return clear_output(wait = True)
+    os.system('clear')
 def info():
-    #clear_output()
     print('Press class to preview stats, (b) for going back,(c) to pick')
 Knight = player("Knight",150,150,10,40,0,0)
 Assassin = player("Assassin",130,130,20,50,50,0)
@@ -119,7 +118,7 @@ Berserker = player("Berserker",140,130,5,65,0,10)
 Paladin = player("Paladin",180,180,10,10,0,40)
     
 x = input("Your name is: ")
-clear_output()
+os.system('clear')
 print("Welcome, ",x)
 wait()
 info()
